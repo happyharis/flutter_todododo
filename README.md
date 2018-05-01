@@ -1,6 +1,6 @@
 # todododo
 
-My first attempt on creating a to-do app with Flutter. Working with a Firebase database and CRUD application.
+My first attempt on creating a beta [tododo](https://www.youtube.com/watch?v=ImhfIv5NSqY) app with beta framework Flutter with beta database Firestore. Working a simple CRUD application.
 
 ## Getting Started
 

@@ -9,7 +9,7 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
 
-  
+
   
   @override
   Widget build(BuildContext context) {
@@ -27,34 +27,35 @@ class _LandingPageState extends State<LandingPage> {
       ),
         
       floatingActionButton: fab,
+      body: TodoList(),
+    );
+  }
+}
 
-      body: new ListView(
-        children: <Widget>[
-          new ListTile(
-            title: new Row(
-              children: <Widget>[
-                new Expanded(child: new TextField(
-                  decoration: new InputDecoration.collapsed(hintText: "Write your task here...")
-                ),),
-                new Checkbox(value: false, onChanged: (bool value){},)
-              ],
-            )
-          ),
-          new ListTile(
-            // onTap: null,
-            title: new Row(
-              children: <Widget>[
-                new Expanded(child: new Text("Fkin work"),),
-                new Checkbox(
-                  value: false, // cannot put null. wtf
-                  onChanged: (bool value){
-                })
-              ],
-            )
-          ),
-
-        ],
-      )
+class TodoList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('todo_list').snapshots,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (!snapshot.hasData) return new Text('Loading...');
+        return new ListView(
+          children: snapshot.data.documents.map((DocumentSnapshot document) {
+            return new ListTile(
+              subtitle: new Text("Due: " + document['due_date']),
+              title: new Row(
+                children: <Widget>[
+                  new Expanded(child: new Text(document['task']),),
+                  new Checkbox(
+                    value: false, // cannot put null. wtf
+                    onChanged: (bool value){
+                  })
+                ],
+              )
+            );
+          }).toList(),
+        );
+      },
     );
   }
 }

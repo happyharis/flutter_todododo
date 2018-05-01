@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async'; // JSON
+
 
 import './landing_page.dart';
 
@@ -9,15 +11,23 @@ class NewTododoPage extends StatefulWidget {
 }
 
 class NewTododoPageState extends State<NewTododoPage> {
-  final TextEditingController _textctrl = new TextEditingController();
+  final _taskController = new TextEditingController();
+  final _dueDateController = new TextEditingController();
   List<String> txtList = [];
   
+  // @override
+  //   void initState() {
+  //     Firestore.instance.collection('todo_list').document()
+  //     .setData({ 'task': task_text, 'due_date': due_date });
+  //     super.initState();
+  //   }
+
   @override
-    void initState() {
-      Firestore.instance.collection('Todo').document()
-      .setData({ 'title': 'This better fkin work', 'author': 'Haris' });
-      super.initState();
-    }
+  void dispose() {
+    _taskController.dispose();
+    _dueDateController.dispose();
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -35,7 +45,7 @@ class NewTododoPageState extends State<NewTododoPage> {
               child: new Text("What?", style: new TextStyle(fontSize: 20.0),),
             ),
             new TextField(
-              controller: _textctrl,
+              controller: _taskController,
               maxLines: 1,
               maxLength: 30,
               autocorrect: true,
@@ -47,6 +57,7 @@ class NewTododoPageState extends State<NewTododoPage> {
               child: new Text("When?", style: new TextStyle(fontSize: 20.0),),
             ),
             new TextField(
+              controller: _dueDateController,
               decoration: new InputDecoration(hintText: "Choose the task's date due "),
             ),
             new Padding(padding: const EdgeInsets.all(15.0),),
@@ -56,18 +67,19 @@ class NewTododoPageState extends State<NewTododoPage> {
                 new RaisedButton(  
                   child: new Text("Save"),
                   onPressed: (){
-                    txtList.add(_textctrl.text);
-                    _textctrl.clear();
+                    txtList.add(_taskController.text);
+                    txtList.add(_dueDateController.text);
+                    Firestore.instance.collection('todo_list').document()
+                    .setData({ 'task': _taskController.text, 'due_date': _dueDateController.text });
                     Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
                     print(txtList);
                   },
                 )
               ],
-            )
+            ),
           ]
         ),
       ),
     );
-
   }
 }
