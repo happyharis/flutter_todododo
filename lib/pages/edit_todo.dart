@@ -4,8 +4,9 @@ import './landing_page.dart';
 
 class EditTodoPage extends StatefulWidget{
   final Map<String, String> todo;
+  final String todoID;
 
-  EditTodoPage({Key key, this.todo}) : super (key: key);
+  EditTodoPage({Key key, this.todo, this.todoID}) : super (key: key);
   // Optional parameters, global key, 
   
   @override
@@ -13,17 +14,21 @@ class EditTodoPage extends StatefulWidget{
 }
 
 class EditTodoPageState extends State<EditTodoPage> {
-  final DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
+  
+  String selectedTodoId;
+  DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   final _taskController = new TextEditingController();
   final _dueDateController = new TextEditingController();
-
+  
   @override
   void initState(){
     _taskController.text = widget.todo['task'];
     _dueDateController.text = widget.todo['due_date'];
+    selectedTodoId = widget.todoID;
+    documentReference = Firestore.instance.collection('todo_list').document(selectedTodoId);
     super.initState();
   }
-
+  
   void _update(data) {
     documentReference.updateData(data).whenComplete((){
       print('Document Updated');
@@ -68,12 +73,10 @@ class EditTodoPageState extends State<EditTodoPage> {
                 new RaisedButton(  
                   child: new Text("Save Changes"),
                   onPressed: (){
-                    print(documentReference.documentID);
-                    // widget.todo["task"] = _taskController.text;
-                    // widget.todo["due_date"] = _dueDateController.text;
-                    // _update(widget.todo);
-                    // Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
-                    // print(widget.todo);
+                    widget.todo["task"] = _taskController.text;
+                    widget.todo["due_date"] = _dueDateController.text;
+                    _update(widget.todo);
+                    Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
                   },
                 )
               ],

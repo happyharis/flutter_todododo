@@ -37,6 +37,7 @@ class TodoList extends StatefulWidget {
 }
 
 class TodoListState extends State<TodoList> {
+  String selectedTodoId;
   Map<String, String> currentTodo = <String, String> {"task": "", "due_date": ""};
   final DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   
@@ -63,7 +64,7 @@ class TodoListState extends State<TodoList> {
             new FlatButton(
               child: new Text('Edit'),
               onPressed: (){
-                Navigator.push(context, new MaterialPageRoute(builder: (context) => new EditTodoPage(todo: data)));
+                Navigator.push(context, new MaterialPageRoute(builder: (context) => new EditTodoPage(todo: data, todoID: selectedTodoId,)));
               },
             ),
             new FlatButton(
@@ -89,8 +90,8 @@ class TodoListState extends State<TodoList> {
               onLongPress: (){
                 currentTodo['task'] = document['task'];
                 currentTodo['due_date'] = document['due_date'];
+                selectedTodoId = document.documentID;
                 _showAlert(currentTodo);
-                print(document.documentID);
               },
               title: new Row(
                 children: <Widget>[
