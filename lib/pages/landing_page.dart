@@ -37,22 +37,39 @@ class TodoList extends StatefulWidget {
 }
 
 class TodoListState extends State<TodoList> {
+  Map<String, String> currentTodo = <String, String> {"task": "", "due_date": ""};
+  final DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   
+
+
+  void _delete (){
+    documentReference.delete().whenComplete((){
+      print("Deleted successfullly");
+      setState(() {});
+    }).catchError((e)=>print(e));
+  }
   @override
   Widget build(BuildContext context) {
   
-  Future<Null> _showAlert() async{
+  
+  Future<Null> _showAlert(data) async{
     return showDialog<Null>(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return new AlertDialog(
-          title: new Text('Would you like to make changes?'),
+          title: new Text('Would you like to make changes?', style: new TextStyle(fontSize: 17.0)),
           actions: <Widget>[
             new FlatButton(
               child: new Text('Edit'),
               onPressed: (){
-                Navigator.push(context, new MaterialPageRoute(builder: (context) => new EditTodoPage()));
+                Navigator.push(context, new MaterialPageRoute(builder: (context) => new EditTodoPage(todo: data)));
+              },
+            ),
+            new FlatButton(
+              child: new Text('Delete'),
+              onPressed: (){
+                _delete();
               },
             )
           ],
@@ -61,7 +78,7 @@ class TodoListState extends State<TodoList> {
     );
   }
   
-    return new StreamBuilder<QuerySnapshot>(
+  return new StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection('todo_list').snapshots,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return new Text('Loading...');
@@ -70,7 +87,10 @@ class TodoListState extends State<TodoList> {
             return new ListTile(
               subtitle: new Text("Due: " + document['due_date']),
               onLongPress: (){
-                _showAlert();
+                currentTodo['task'] = document['task'];
+                currentTodo['due_date'] = document['due_date'];
+                _showAlert(currentTodo);
+                print(document.documentID);
               },
               title: new Row(
                 children: <Widget>[
@@ -86,5 +106,6 @@ class TodoListState extends State<TodoList> {
         );
       },
     );
+  
   }
 }
