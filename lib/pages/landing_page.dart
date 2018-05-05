@@ -43,8 +43,10 @@ class TodoListState extends State<TodoList> {
   
 
 
-  void _delete (){
-    documentReference.delete().whenComplete((){
+  void _delete (id){
+    final DocumentReference document = Firestore.instance.collection('todo_list').document(id);
+    print(id);
+    document.delete().whenComplete((){
       print("Deleted successfullly");
       setState(() {});
     }).catchError((e)=>print(e));
@@ -53,7 +55,7 @@ class TodoListState extends State<TodoList> {
   Widget build(BuildContext context) {
   
   
-  Future<Null> _showAlert(data) async{
+  Future _showAlert(data) async{
     return showDialog<Null>(
       context: context,
       barrierDismissible: true,
@@ -70,7 +72,8 @@ class TodoListState extends State<TodoList> {
             new FlatButton(
               child: new Text('Delete'),
               onPressed: (){
-                _delete();
+                _delete(selectedTodoId);
+                Navigator.of(context).pop();
               },
             )
           ],
