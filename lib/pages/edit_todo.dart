@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import './landing_page.dart';
 
 class EditTodoPage extends StatefulWidget{
   final Map<String, String> todo;
