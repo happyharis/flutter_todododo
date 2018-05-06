@@ -16,37 +16,6 @@ class NewTododoPageState extends State<NewTododoPage> {
   final _taskController = new TextEditingController();
   final _dueDateController = new TextEditingController();
   List<String> txtList = [];
-  
-  void _add() {
-    Map<String, String> data = <String, String> {
-      "task": "task",
-      "due_date": "due_date"
-    };
-    documentReference.setData(data).whenComplete((){
-      print("Document added");
-    }).catchError((e)=>print(e));
-  }
-
-  void _delete(){
-
-  }
-
-  void _fetch(){
-    documentReference.get().then((datasnapshot){
-      if (datasnapshot.exists) {
-        setState(() {
-          // something = datasnapshot.data['desc'];
-        });
-      }
-    });
-  }
-  
-  // @override
-  //   void initState() {
-  //     Firestore.instance.collection('todo_list').document()
-  //     .setData({ 'task': task_text, 'due_date': due_date });
-  //     super.initState();
-  //   }
 
   @override
   void dispose() {
