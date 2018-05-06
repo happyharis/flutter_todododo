@@ -18,7 +18,8 @@ class Tododo extends StatelessWidget {
       ),
       home: LandingPage(),
       routes: <String, WidgetBuilder> {
-        '/': (BuildContext context) => new LandingPage()
+        "/todo/new": (BuildContext context) => new NewTododoPage(),
+        "/todo/edit": (BuildContext context) => new EditTodoPage(),
       },
     );
   }
