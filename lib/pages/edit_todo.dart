@@ -76,7 +76,9 @@ class EditTodoPageState extends State<EditTodoPage> {
                     widget.todo["task"] = _taskController.text;
                     widget.todo["due_date"] = _dueDateController.text;
                     _update(widget.todo);
-                    Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
+                    Navigator.popUntil(context, (route){
+                      return route.settings.name == "/";
+                    });
                   },
                 )
               ],
