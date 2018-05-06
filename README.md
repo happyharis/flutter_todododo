@@ -2,6 +2,12 @@
 
 My first attempt on creating a beta [tododo](https://www.youtube.com/watch?v=ImhfIv5NSqY) app with beta framework Flutter with beta database Firestore. Working a simple CRUD application.
 
+## TODO:
+1. Calendar widget for due date
+2. Done top bar to check done-ded tasks
+3. Timestamp for all tasks
+4. Timestamp for tasks that are done
+
 ## Getting Started
 
 For help getting started with Flutter, view our online
