@@ -49,9 +49,8 @@ class NewTododoPageState extends State<NewTododoPage> {
               padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
               child: new Text("When?", style: new TextStyle(fontSize: 20.0),),
             ),
-            new TextField(
-              controller: _dueDateController,
-              decoration: new InputDecoration(hintText: "Choose the task's date due "),
+            new ListTile(
+              leading: new Icon(Icons.today, color: Colors.grey[500],),
             ),
             new Padding(padding: const EdgeInsets.all(15.0),),
             new Row(
