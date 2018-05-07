@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import './landing_page.dart';
-
+import 'dart:async';
 class NewTododoPage extends StatefulWidget {
   @override
   State createState() => new NewTododoPageState();
@@ -12,13 +12,29 @@ class NewTododoPage extends StatefulWidget {
 class NewTododoPageState extends State<NewTododoPage> {
   final DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   final _taskController = new TextEditingController();
-  final _dueDateController = new TextEditingController();
   List<String> txtList = [];
+
+  DateTime _date = new DateTime.now();
+
+  Future<Null> _selectedDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: new DateTime(2016),
+      lastDate: new DateTime(2019)
+    );
+
+    if(picked != null && picked != _date) {
+      print('Date selected: ${_date.toString()}');
+      setState(() {
+        _date = picked;
+      });
+    }
+  }
 
   @override
   void dispose() {
     _taskController.dispose();
-    _dueDateController.dispose();
     super.dispose();
   }
   
@@ -60,9 +76,8 @@ class NewTododoPageState extends State<NewTododoPage> {
                   child: new Text("Save"),
                   onPressed: (){
                     txtList.add(_taskController.text);
-                    txtList.add(_dueDateController.text);
                     Firestore.instance.collection('todo_list').document()
-                    .setData({ 'task': _taskController.text, 'due_date': _dueDateController.text });
+                    .setData({ 'task': _taskController.text, 'due_date': _date });
                     Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
                     print(txtList);
                   },
@@ -75,4 +90,3 @@ class NewTododoPageState extends State<NewTododoPage> {
     );
   }
 }
-
