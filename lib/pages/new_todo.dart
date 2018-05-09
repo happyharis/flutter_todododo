@@ -18,8 +18,6 @@ class NewTododoPageState extends State<NewTododoPage> {
   List<String> txtList = [];
 
   DateTime _date = new DateTime.now();
-  final TimeOfDay time = new TimeOfDay.now();
-  final ValueChanged<DateTime> onChanged;
 
   Future<Null> _selectedDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -31,7 +29,7 @@ class NewTododoPageState extends State<NewTododoPage> {
 
     if(picked != null && picked != _date) {
       print('Date selected: ${_date.toString()}');
-      onChanged(new DateTime(picked.year, picked.month, picked.day, time.hour, time.minute));
+      
       setState(() {
         _date = picked;
       });
