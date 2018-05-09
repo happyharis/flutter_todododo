@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'dart:async';
 
 class EditTodoPage extends StatefulWidget{
   final Map<String, String> todo;
@@ -17,15 +20,38 @@ class EditTodoPageState extends State<EditTodoPage> {
   String selectedTodoId;
   DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   final _taskController = new TextEditingController();
-  final _dueDateController = new TextEditingController();
   
+  DateTime _date = new DateTime.now();
+
+  Future<Null> _selectedDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: new DateTime(2016),
+      lastDate: new DateTime(2019)
+    );
+
+    if(picked != null && picked != _date) {
+      print('Date selected: ${_date.toString()}');
+      setState(() {
+        _date = picked;
+      });
+    }
+  }
+
   @override
   void initState(){
     _taskController.text = widget.todo['task'];
-    _dueDateController.text = widget.todo['due_date'];
     selectedTodoId = widget.todoID;
     documentReference = Firestore.instance.collection('todo_list').document(selectedTodoId);
+    initializeDateFormatting();
     super.initState();
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _taskController.dispose();
   }
   
   void _update(data) {
@@ -61,9 +87,10 @@ class EditTodoPageState extends State<EditTodoPage> {
               padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
               child: new Text("When?", style: new TextStyle(fontSize: 20.0),),
             ),
-            new TextField(
-              controller: _dueDateController,
-              decoration: new InputDecoration(hintText: "Choose the task's date due "),
+            new ListTile(
+              leading: new Icon(Icons.today, color: Colors.grey[500],),
+              title: new Text( DateFormat('d MMMM y', 'en').format(_date)),
+              onTap: () => _selectedDate(context),
             ),
             new Padding(padding: const EdgeInsets.all(15.0),),
             new Row(
@@ -73,7 +100,7 @@ class EditTodoPageState extends State<EditTodoPage> {
                   child: new Text("Save Changes"),
                   onPressed: (){
                     widget.todo["task"] = _taskController.text;
-                    widget.todo["due_date"] = _dueDateController.text;
+                    widget.todo["due_date"] = _date.toString();
                     _update(widget.todo);
                     Navigator.popUntil(context, (route){
                       return route.settings.name == "/";
