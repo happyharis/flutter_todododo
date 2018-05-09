@@ -5,8 +5,8 @@ My first attempt on creating a beta [tododo](https://www.youtube.com/watch?v=Imh
 ## TODO:
 1. Calendar widget for due date
 2. Done top bar to check done-ded tasks
-3. Timestamp for all tasks
-4. Timestamp for tasks that are done
+3. When checkbox selected, will dissapear
+4. Timestap when checkbox selected
 
 ## Getting Started
 
