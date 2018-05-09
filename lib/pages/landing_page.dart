@@ -89,10 +89,10 @@ class TodoListState extends State<TodoList> {
         return new ListView(
           children: snapshot.data.documents.map((DocumentSnapshot document) {
             return new ListTile(
-              subtitle: new Text("Due: " + document['due_date']),
+              subtitle: new Text("Due: " + document['due_date'].toString()),
               onLongPress: (){
                 currentTodo['task'] = document['task'];
-                currentTodo['due_date'] = document['due_date'];
+                currentTodo['due_date'] = document['due_date'].toString();
                 selectedTodoId = document.documentID;
                 _showAlert(currentTodo);
               },
