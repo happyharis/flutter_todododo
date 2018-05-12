@@ -106,7 +106,8 @@ class TodoListState extends State<TodoList> {
         if (!snapshot.hasData) return new Text('Loading...');
         return new ListView(
           children: snapshot.data.documents.map((DocumentSnapshot document) {
-            return new ListTile(
+            return document['status'] == false ?
+            new ListTile(
               subtitle: new Text("Due: " + document['due_date'].toString()),
               onLongPress: (){
                 currentTodo['task'] = document['task'];
@@ -123,7 +124,7 @@ class TodoListState extends State<TodoList> {
                   })
                 ],
               )
-            );
+            ) : new Text("");
           }).toList(),
         );
       },
