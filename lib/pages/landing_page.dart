@@ -59,7 +59,10 @@ class TodoListState extends State<TodoList> {
   Map<String, String> currentTodo = <String, String> {"task": "", "due_date": ""};
   final DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   
-
+  @override
+  void dispose(){
+    super.dispose();
+  }
 
   void _delete (id){
     final DocumentReference document = Firestore.instance.collection('todo_list').document(id);
@@ -68,6 +71,17 @@ class TodoListState extends State<TodoList> {
       print("Deleted successfullly");
       setState(() {});
     }).catchError((e)=>print(e));
+  }
+
+  void _finishTask(status, id){
+    if (status == true) {
+      final DocumentReference document = Firestore.instance.collection('todo_list').document(id);
+      Map <String, bool> data = <String, bool> {
+        "status": true
+      };
+      document.updateData(data);
+    }
+    
   }
   @override
   Widget build(BuildContext context) {
@@ -101,7 +115,7 @@ class TodoListState extends State<TodoList> {
   }
   
   return new StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('todo_list').snapshots,
+      stream: Firestore.instance.collection('todo_list').where('status', isEqualTo: false).snapshots,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return new Text('Loading...');
         return new ListView(
@@ -119,12 +133,14 @@ class TodoListState extends State<TodoList> {
                 children: <Widget>[
                   new Expanded(child: new Text(document['task']),),
                   new Checkbox(
-                    value: false, // cannot put null. wtf
+                    value: false,
                     onChanged: (bool value){
+                      _finishTask(value, document.documentID);
+
                   })
                 ],
               )
-            ) : new Text("");
+            ) : new ListTile(subtitle: new Text("No tasks! Create one!"),);
           }).toList(),
         );
       },
