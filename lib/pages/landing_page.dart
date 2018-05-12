@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './new_todo.dart';
 import './edit_todo.dart';
+import './doneded_todo.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,6 +10,7 @@ class LandingPage extends StatefulWidget {
   State createState() => new _LandingPageState();
 }
 
+enum TestEnum {A}
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
@@ -23,8 +25,24 @@ class _LandingPageState extends State<LandingPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("To-do Do", style: new TextStyle(fontFamily: "Ubuntu"),),
+        actions: <Widget>[
+          new PopupMenuButton(
+            itemBuilder: (BuildContext context){
+              return <PopupMenuEntry<TestEnum>>[
+                new PopupMenuItem(
+                  child: new FlatButton(
+                    child: new Text("Done-ded tasks"),
+                    onPressed: (){
+                      Navigator.push(context, new MaterialPageRoute(builder: (context)=> new DonededTodoPage()));
+                    },
+                  ),
+                ),
+              ];
+            },
+          )
+        ],
       ),
-        
+
       floatingActionButton: fab,
       body: TodoList(),
     );
@@ -88,11 +106,12 @@ class TodoListState extends State<TodoList> {
         if (!snapshot.hasData) return new Text('Loading...');
         return new ListView(
           children: snapshot.data.documents.map((DocumentSnapshot document) {
-            return new ListTile(
-              subtitle: new Text("Due: " + document['due_date']),
+            return document['status'] == false ?
+            new ListTile(
+              subtitle: new Text("Due: " + document['due_date'].toString()),
               onLongPress: (){
                 currentTodo['task'] = document['task'];
-                currentTodo['due_date'] = document['due_date'];
+                currentTodo['due_date'] = document['due_date'].toString();
                 selectedTodoId = document.documentID;
                 _showAlert(currentTodo);
               },
@@ -105,7 +124,7 @@ class TodoListState extends State<TodoList> {
                   })
                 ],
               )
-            );
+            ) : new Text("");
           }).toList(),
         );
       },

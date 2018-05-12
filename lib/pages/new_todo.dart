@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'dart:async';
 
 import './landing_page.dart';
 
@@ -12,13 +15,37 @@ class NewTododoPage extends StatefulWidget {
 class NewTododoPageState extends State<NewTododoPage> {
   final DocumentReference documentReference = Firestore.instance.collection('todo_list').document();
   final _taskController = new TextEditingController();
-  final _dueDateController = new TextEditingController();
   List<String> txtList = [];
+
+  DateTime _date = new DateTime.now();
+
+  Future<Null> _selectedDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: new DateTime(2016),
+      lastDate: new DateTime(2019)
+    );
+
+    if(picked != null && picked != _date) {
+      print('Date selected: ${_date.toString()}');
+      
+      setState(() {
+        _date = picked;
+      });
+    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    initializeDateFormatting();
+    
+  }
 
   @override
   void dispose() {
     _taskController.dispose();
-    _dueDateController.dispose();
     super.dispose();
   }
   
@@ -49,9 +76,10 @@ class NewTododoPageState extends State<NewTododoPage> {
               padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
               child: new Text("When?", style: new TextStyle(fontSize: 20.0),),
             ),
-            new TextField(
-              controller: _dueDateController,
-              decoration: new InputDecoration(hintText: "Choose the task's date due "),
+            new ListTile(
+              leading: new Icon(Icons.today, color: Colors.grey[500],),
+              title: new Text( DateFormat('d MMMM y', 'en').format(_date)),
+              onTap: () => _selectedDate(context),
             ),
             new Padding(padding: const EdgeInsets.all(15.0),),
             new Row(
@@ -61,9 +89,8 @@ class NewTododoPageState extends State<NewTododoPage> {
                   child: new Text("Save"),
                   onPressed: (){
                     txtList.add(_taskController.text);
-                    txtList.add(_dueDateController.text);
                     Firestore.instance.collection('todo_list').document()
-                    .setData({ 'task': _taskController.text, 'due_date': _dueDateController.text });
+                    .setData({ 'task': _taskController.text, 'due_date': _date.toString() });
                     Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
                     print(txtList);
                   },
@@ -76,4 +103,3 @@ class NewTododoPageState extends State<NewTododoPage> {
     );
   }
 }
-
