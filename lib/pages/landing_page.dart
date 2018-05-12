@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './new_todo.dart';
 import './edit_todo.dart';
+import './doneded_todo.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -31,7 +32,9 @@ class _LandingPageState extends State<LandingPage> {
                 new PopupMenuItem(
                   child: new FlatButton(
                     child: new Text("Done-ded tasks"),
-                    onPressed: (){},
+                    onPressed: (){
+                      Navigator.push(context, new MaterialPageRoute(builder: (context)=> new DonededTodoPage()));
+                    },
                   ),
                 ),
               ];
