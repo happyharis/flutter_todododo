@@ -1,12 +1,6 @@
 # todododo
 
-My first attempt on creating a beta [tododo](https://www.youtube.com/watch?v=ImhfIv5NSqY) app with beta framework Flutter with beta database Firestore. Working a simple CRUD application.
-
-## TODO:
-1. Calendar widget for due date
-2. Done top bar to check done-ded tasks
-3. When checkbox selected, will dissapear
-4. Timestap when checkbox selected
+My first attempt on creating a beta [tododo](https://www.youtube.com/watch?v=ImhfIv5NSqY) app with beta (version 2) framework Flutter with beta database Firestore. Working a simple CRUD application.
 
 ## Getting Started
 
