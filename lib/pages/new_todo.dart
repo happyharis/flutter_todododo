@@ -90,7 +90,7 @@ class NewTododoPageState extends State<NewTododoPage> {
                   onPressed: (){
                     txtList.add(_taskController.text);
                     Firestore.instance.collection('todo_list').document()
-                    .setData({ 'task': _taskController.text, 'due_date': _date.toString() });
+                    .setData({ 'task': _taskController.text, 'due_date': _date.toString(), 'status': false });
                     Navigator.of(context).pop(new MaterialPageRoute(builder: (BuildContext context) => new LandingPage()));
                     print(txtList);
                   },
