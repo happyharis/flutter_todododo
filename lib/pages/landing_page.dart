@@ -9,6 +9,7 @@ class LandingPage extends StatefulWidget {
   State createState() => new _LandingPageState();
 }
 
+enum TestEnum {A}
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
@@ -23,8 +24,22 @@ class _LandingPageState extends State<LandingPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("To-do Do", style: new TextStyle(fontFamily: "Ubuntu"),),
+        actions: <Widget>[
+          new PopupMenuButton(
+            itemBuilder: (BuildContext context){
+              return <PopupMenuEntry<TestEnum>>[
+                new PopupMenuItem(
+                  child: new FlatButton(
+                    child: new Text("Done-ded tasks"),
+                    onPressed: (){},
+                  ),
+                ),
+              ];
+            },
+          )
+        ],
       ),
-        
+
       floatingActionButton: fab,
       body: TodoList(),
     );
